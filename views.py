@@ -47,3 +47,5 @@ class ProductOperations(View):
             message = {"error": "Please Provide Product No"}
             json_data = JSONRenderer().render(message)
             return HttpResponse(json_data, content_type="application/json")
+
+print("Thanks")
