@@ -26,3 +26,24 @@ class ProductOperations(View):
 
         json_data = JSONRenderer().render(message)
         return HttpResponse(json_data,content_type="application/json")
+
+    
+    class ReadOneProduct(View):
+    def get(self,request):
+        b_data = request.body
+        strm = io.BytesIO(b_data)
+        d1 = JSONParser().parse(strm)
+        product_no = d1.get("product_no",None)
+        if product_no:
+            try:
+                res = ProductModel.objects.get(no=product_no)
+                ps = ProductSerializer(res)
+                json_data = JSONRenderer().render(ps.data)
+            except ProductModel.DoesNotExist:
+                message = {"error": "Invalid Product No"}
+                json_data = JSONRenderer().render(message)
+            return HttpResponse(json_data,content_type="application/json")
+        else:
+            message = {"error": "Please Provide Product No"}
+            json_data = JSONRenderer().render(message)
+            return HttpResponse(json_data, content_type="application/json")
